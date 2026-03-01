@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高度決算分析ツール</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- PDF.js の読み込み -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+</head>
+
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="header-content">
+        <h1 class="logo">Invest<span>Analyzer</span></h1>
+        <p class="subtitle">企業価値とネットキャッシュを精緻に算定</p>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- AI抽出機能エリア -->
+      <div class="panel ai-panel">
+        <div class="panel-header">
+          <h2>🤖 AI決算データ自動抽出</h2>
+          <p>決算短信のPDFを読み込み、財務数値を自動で入力します。</p>
+        </div>
+
+        <div class="ai-controls">
+          <div class="api-key-section">
+            <input type="password" id="api-key-input" placeholder="Gemini API Key を入力" />
+            <button id="save-api-key-btn" class="secondary-btn small-btn">保存</button>
+            <span id="api-key-status" class="status-text hidden">✅ 保存済</span>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer"
+              class="help-link">🔑 APIキーの取得はこちら</a>
+          </div>
+
+          <div class="upload-section">
+            <div class="upload-options">
+              <label for="pdf-upload" class="upload-btn">
+                📄 決算短信PDFを選択
+              </label>
+              <span class="or-text">または</span>
+              <div class="url-input-group">
+                <input type="url" id="pdf-url-input" placeholder="PDFのURLを貼り付け" />
+                <button id="fetch-pdf-btn" class="secondary-btn small-btn">読み込み</button>
+              </div>
+            </div>
+            <input type="file" id="pdf-upload" accept="application/pdf" class="hidden-input" />
+            <span id="file-name-display" class="file-name">選択されていません</span>
+          </div>
+        </div>
+
+        <div id="loading-area" class="loading-area hidden">
+          <div class="spinner"></div>
+          <p id="loading-text">PDFを解析中...</p>
+        </div>
+      </div>
+
+      <div class="panel input-panel">
+        <div class="panel-header">
+          <h2>📊 企業データ入力</h2>
+          <p>AI抽出結果の確認、または手動での入力を行ってください。</p>
+        </div>
+
+        <form id="calc-form" class="form-grid">
+          <!-- 常に表示する項目 -->
+          <div class="form-group highlight-bg">
+            <label for="stockPrice">株価 <span class="unit">(円)</span></label>
+            <input type="number" id="stockPrice" step="any" placeholder="例: 1500">
+          </div>
+          <div class="form-group highlight-bg">
+            <label for="interestRate">想定金利 (日本国債10年) <span class="unit">(%)</span></label>
+            <input type="number" id="interestRate" step="any" value="1.0" placeholder="例: 1.0">
+          </div>
+
+          <!-- 折りたたまれる詳細データ -->
+          <details class="advanced-inputs">
+            <summary>詳細な企業データ (AI自動抽出)</summary>
+            <div class="details-content form-grid" style="margin-bottom: 0;">
+              <!-- 収益・企業規模関連 -->
+              <div class="form-group">
+                <label for="sales">売上高 <span class="unit">(百万円)</span></label>
+                <input type="number" id="sales" step="any" placeholder="例: 10000">
+              </div>
+              <div class="form-group">
+                <label for="operatingIncome">営業利益 <span class="unit">(百万円)</span></label>
+                <input type="number" id="operatingIncome" step="any" placeholder="例: 1000">
+              </div>
+              <div class="form-group">
+                <label for="netIncome">当期純利益 <span class="unit">(百万円)</span></label>
+                <input type="number" id="netIncome" step="any" placeholder="例: 800">
+              </div>
+
+              <!-- 資産・負債関連 -->
+              <div class="form-group">
+                <label for="totalAssets">資産合計 <span class="unit">(百万円)</span></label>
+                <input type="number" id="totalAssets" step="any" placeholder="例: 20000">
+              </div>
+              <div class="form-group">
+                <label for="equity">自己資本 <span class="unit">(百万円)</span></label>
+                <input type="number" id="equity" step="any" placeholder="例: 10000">
+              </div>
+              <div class="form-group">
+                <label for="currentAssets">流動資産 <span class="unit">(百万円)</span></label>
+                <input type="number" id="currentAssets" step="any" placeholder="例: 8000">
+              </div>
+              <div class="form-group">
+                <label for="currentLiabilities">流動負債 <span class="unit">(百万円)</span></label>
+                <input type="number" id="currentLiabilities" step="any" placeholder="例: 4000">
+              </div>
+              <div class="form-group">
+                <label for="totalLiabilities">負債合計 <span class="unit">(百万円)</span></label>
+                <input type="number" id="totalLiabilities" step="any" placeholder="例: 10000">
+              </div>
+              <div class="form-group">
+                <label for="investmentSecurities">投資有価証券 <span class="unit">(百万円)</span></label>
+                <input type="number" id="investmentSecurities" step="any" placeholder="ない場合は0" value="0">
+              </div>
+
+              <!-- 発行済株式数 -->
+              <div class="form-group">
+                <label for="sharesOutstanding">発行済株式数 <span class="unit">(万株)</span></label>
+                <input type="number" id="sharesOutstanding" step="any" placeholder="例: 2000">
+              </div>
+            </div>
+          </details>
+        </form>
+
+        <div class="action-bar">
+          <button id="calc-button" class="primary-btn">分析を実行する 🚀</button>
+          <button id="clear-button" class="secondary-btn">クリア</button>
+        </div>
+      </div>
+
+      <div class="panel result-panel">
+        <div class="panel-header">
+          <h2>✨ 分析結果</h2>
+          <p>入力データからリアルタイムに算定された高度な指標です。</p>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-grid">
+            <div class="unified-result-card">
+              <!-- 基礎指標 -->
+              <div class="result-item">
+                <span class="label">営業利益率</span>
+                <span class="value" id="res-operatingMargin">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">ROE (自己資本利益率)</span>
+                <span class="value" id="res-roe">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">自己資本比率</span>
+                <span class="value" id="res-equityRatio">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">流動比率</span>
+                <span class="value" id="res-currentRatio">--</span>
+              </div>
+
+              <!-- バリュエーション -->
+              <div class="result-item">
+                <span class="label">PSR <small>(株価売上高倍率)</small></span>
+                <span class="value" id="res-psr">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">PBR <small>(株価純資産倍率)</small></span>
+                <span class="value" id="res-pbr">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">PER <small>(株価収益率)</small></span>
+                <span class="value" id="res-per">--</span>
+              </div>
+
+              <!-- 高度な分析 (ネットキャッシュ) -->
+              <div class="result-item highlight">
+                <span class="label">ネットキャッシュ比率</span>
+                <span class="value huge" id="res-netCashRatio">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">CN PER <small>(キャッシュニュートラル)</small></span>
+                <span class="value" id="res-cnPer">--</span>
+              </div>
+
+              <!-- 成長性要件 -->
+              <div class="result-item highlight-success">
+                <span class="label">想定利益成長率<br><small>(現在の評価を正当化する最低成長要件)</small></span>
+                <span class="value huge" id="res-growthRate">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>
