@@ -136,19 +136,28 @@ document.addEventListener('DOMContentLoaded', () => {
       netCashRatio = rawNetCashRatio * 100;
 
       if (per !== null) {
-        // キャッシュニュートラルPER
-        cnPer = (1 - rawNetCashRatio) * per;
+        // 想定利益成長率とCN PER (ネットキャッシュ比率が100%以上の場合はマイナスになり意味を持たないので計算不可とする)
+        if (netCashRatio >= 100) {
+          cnPer = null;
+          growthRate = null;
+        } else {
+          // キャッシュニュートラルPER
+          cnPer = (1 - rawNetCashRatio) * per;
 
-        // 想定利益成長率
-        const rateDecimal = interestRate / 100;
-        if (cnPer !== 0) {
-          const rawGrowth = ((cnPer - 1) * rateDecimal - 1) / cnPer;
-          growthRate = rawGrowth * 100;
+          const rateDecimal = interestRate / 100;
+          if (cnPer !== 0) {
+            const rawGrowth = ((cnPer - 1) * rateDecimal - 1) / cnPer;
+            growthRate = rawGrowth * 100;
+          }
         }
       }
     }
 
     // 3. 結果の表示
+    // 表示用の時価総額（10億円単位 = 百万円 / 1000）
+    const displayMarketCap = marketCap !== null ? marketCap / 1000 : null;
+    updateDisplay('res-marketCap', formatNum(displayMarketCap, 1)); // 小数点第1位まで表示
+
     updateDisplay('res-operatingMargin', formatPercent(operatingMargin));
     updateDisplay('res-roe', formatPercent(roe));
     updateDisplay('res-equityRatio', formatPercent(equityRatio));

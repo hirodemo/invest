@@ -69,11 +69,11 @@
         <form id="calc-form" class="form-grid">
           <!-- 常に表示する項目 -->
           <div class="form-group highlight-bg">
-            <label for="stockPrice">株価 <span class="unit">(円)</span></label>
+            <label for="stockPrice">現在株価 <span class="unit">(円)</span></label>
             <input type="number" id="stockPrice" step="any" placeholder="例: 1500">
           </div>
           <div class="form-group highlight-bg">
-            <label for="interestRate">想定金利 (日本国債10年) <span class="unit">(%)</span></label>
+            <label for="interestRate">想定金利 <span class="unit">(%)</span></label>
             <input type="number" id="interestRate" step="any" value="1.0" placeholder="例: 1.0">
           </div>
 
@@ -145,7 +145,31 @@
         <div class="result-grid">
           <div class="result-grid">
             <div class="unified-result-card">
-              <!-- 基礎指標 -->
+              <!-- 指定順序に並び替え -->
+              <div class="result-item">
+                <span class="label">時価総額 <small>(10億円)</small></span>
+                <span class="value" id="res-marketCap">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">PER <small>(株価収益率)</small></span>
+                <span class="value" id="res-per">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">PBR <small>(株価純資産倍率)</small></span>
+                <span class="value" id="res-pbr">--</span>
+              </div>
+              <div class="result-item highlight">
+                <span class="label">ネットキャッシュ比率</span>
+                <span class="value huge" id="res-netCashRatio">--</span>
+              </div>
+              <div class="result-item">
+                <span class="label">CN PER <small>(キャッシュニュートラル)</small></span>
+                <span class="value" id="res-cnPer">--</span>
+              </div>
+              <div class="result-item highlight-success">
+                <span class="label">想定利益成長率<br><small>(現在の評価を正当化する最低成長要件)</small></span>
+                <span class="value huge" id="res-growthRate">--</span>
+              </div>
               <div class="result-item">
                 <span class="label">営業利益率</span>
                 <span class="value" id="res-operatingMargin">--</span>
@@ -162,35 +186,9 @@
                 <span class="label">流動比率</span>
                 <span class="value" id="res-currentRatio">--</span>
               </div>
-
-              <!-- バリュエーション -->
               <div class="result-item">
                 <span class="label">PSR <small>(株価売上高倍率)</small></span>
                 <span class="value" id="res-psr">--</span>
-              </div>
-              <div class="result-item">
-                <span class="label">PBR <small>(株価純資産倍率)</small></span>
-                <span class="value" id="res-pbr">--</span>
-              </div>
-              <div class="result-item">
-                <span class="label">PER <small>(株価収益率)</small></span>
-                <span class="value" id="res-per">--</span>
-              </div>
-
-              <!-- 高度な分析 (ネットキャッシュ) -->
-              <div class="result-item highlight">
-                <span class="label">ネットキャッシュ比率</span>
-                <span class="value huge" id="res-netCashRatio">--</span>
-              </div>
-              <div class="result-item">
-                <span class="label">CN PER <small>(キャッシュニュートラル)</small></span>
-                <span class="value" id="res-cnPer">--</span>
-              </div>
-
-              <!-- 成長性要件 -->
-              <div class="result-item highlight-success">
-                <span class="label">想定利益成長率<br><small>(現在の評価を正当化する最低成長要件)</small></span>
-                <span class="value huge" id="res-growthRate">--</span>
               </div>
             </div>
           </div>

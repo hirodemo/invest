@@ -1,21 +1,22 @@
 :root {
-  --bg-color: #1a1614;
-  --panel-bg: rgba(36, 28, 24, 0.6);
-  --panel-border: rgba(66, 52, 46, 0.8);
-  --text-main: #f5ece9;
-  --text-muted: #a89b96;
-  --primary-color: #ff7f50;
-  /* コーラルオレンジ */
-  --primary-hover: #ff632e;
+  --bg-color: #f7f3f0;
+  /* 暖かみのある明るい背景 */
+  --panel-bg: rgba(255, 255, 255, 0.85);
+  --panel-border: rgba(0, 0, 0, 0.06);
+  --text-main: #3d3531;
+  /* 黒すぎないダークブラウン・グレー */
+  --text-muted: #82756d;
+  --primary-color: #fca311;
+  /* ウォームイエロー/オレンジ */
+  --primary-hover: #e08f0a;
   --accent-color: #fca311;
-  /* ウォームイエロー */
-  --card-bg: rgba(36, 28, 24, 0.8);
-  --input-bg: rgba(26, 20, 18, 0.8);
-  --input-border: #4a3a33;
-  --focus-ring: rgba(255, 127, 80, 0.3);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  --gradient-bg: linear-gradient(135deg, rgba(255, 127, 80, 0.08) 0%, rgba(255, 99, 46, 0) 100%);
-  --input-highlight: rgba(255, 127, 80, 0.04);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --input-bg: rgba(250, 248, 246, 0.9);
+  --input-border: #e0d7d3;
+  --focus-ring: rgba(252, 163, 17, 0.3);
+  --glass-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.04);
+  --gradient-bg: linear-gradient(135deg, rgba(252, 163, 17, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  --input-highlight: rgba(252, 163, 17, 0.04);
 }
 
 * {
@@ -29,9 +30,6 @@ body {
   background-color: var(--bg-color);
   color: var(--text-main);
   line-height: 1.5;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(255, 127, 80, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(252, 163, 17, 0.08) 0px, transparent 50%);
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -52,7 +50,7 @@ body {
   font-size: 2.5rem;
   font-weight: 700;
   letter-spacing: -0.05em;
-  color: #fff;
+  color: var(--text-main);
   margin-bottom: 0.5rem;
 }
 
@@ -82,8 +80,8 @@ body {
 /* Panels (Glassmorphism) */
 .panel {
   background: var(--panel-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--panel-border);
   border-radius: 16px;
   padding: 2rem;
@@ -93,7 +91,7 @@ body {
 .ai-panel {
   grid-column: 1 / -1;
   margin-bottom: 1rem;
-  border-color: rgba(255, 127, 80, 0.4);
+  border-color: rgba(252, 163, 17, 0.3);
 }
 
 .panel-header {
@@ -105,7 +103,7 @@ body {
 .panel-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-main);
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -134,7 +132,7 @@ body {
 .api-key-section input {
   background: var(--input-bg);
   border: 1px solid var(--input-border);
-  color: #fff;
+  color: var(--text-main);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -149,11 +147,11 @@ body {
 
 .status-text {
   font-size: 0.85rem;
-  color: var(--accent-color);
+  color: #3b82f6;
 }
 
 .status-text.error {
-  color: #ff6b6b;
+  color: #ef4444;
 }
 
 .help-link {
@@ -161,7 +159,7 @@ body {
   color: var(--primary-color);
   text-decoration: none;
   margin-left: 0.5rem;
-  opacity: 0.8;
+  opacity: 0.9;
   transition: opacity 0.2s;
 }
 
@@ -174,8 +172,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: rgba(26, 20, 18, 0.5);
-  border: 1px dashed var(--panel-border);
+  background: var(--input-bg);
+  border: 1px dashed var(--input-border);
   padding: 1.5rem;
   border-radius: 12px;
 }
@@ -202,7 +200,7 @@ body {
 .url-input-group input {
   background: var(--input-bg);
   border: 1px solid var(--input-border);
-  color: #fff;
+  color: var(--text-main);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -223,10 +221,12 @@ body {
   transition: all 0.2s;
   text-align: center;
   display: inline-block;
+  box-shadow: 0 4px 6px rgba(252, 163, 17, 0.2);
 }
 
 .upload-btn:hover {
   background-color: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .file-name {
@@ -242,9 +242,9 @@ body {
   gap: 1rem;
   margin-top: 1.5rem;
   padding: 1rem;
-  background: rgba(255, 127, 80, 0.1);
+  background: var(--gradient-bg);
   border-radius: 8px;
-  color: var(--primary-color);
+  color: var(--primary-hover);
 }
 
 .hidden {
@@ -254,7 +254,7 @@ body {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(255, 127, 80, 0.3);
+  border: 3px solid rgba(252, 163, 17, 0.3);
   border-radius: 50%;
   border-top-color: var(--primary-color);
   animation: spin 1s ease-in-out infinite;
@@ -291,25 +291,25 @@ body {
 
 .form-group.highlight-bg {
   background-color: var(--input-highlight);
-  border: 1px dashed rgba(255, 127, 80, 0.2);
+  border: 1px dashed rgba(252, 163, 17, 0.3);
 }
 
 .form-group label {
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-main);
 }
 
 .form-group .unit {
   color: var(--text-muted);
   font-size: 0.8rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .form-group input {
   background: var(--input-bg);
   border: 1px solid var(--input-border);
-  color: #fff;
+  color: var(--text-main);
   padding: 0.75rem 1rem;
   border-radius: 8px;
   font-size: 1rem;
@@ -321,16 +321,17 @@ body {
 .form-group input:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px var(--focus-ring);
+  background: #fff;
 }
 
 .form-group input::placeholder {
-  color: rgba(168, 155, 150, 0.5);
+  color: #adb5bd;
 }
 
 /* Details / Summary styles */
 details.advanced-inputs {
   grid-column: 1 / -1;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.02);
   padding: 1rem 1.25rem;
   border-radius: 10px;
   border: 1px solid var(--panel-border);
@@ -340,7 +341,7 @@ details.advanced-inputs {
 details.advanced-inputs summary {
   cursor: pointer;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--primary-hover);
   outline: none;
   user-select: none;
   display: flex;
@@ -392,24 +393,24 @@ button:active {
   flex: 1;
   background-color: var(--primary-color);
   color: #fff;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  box-shadow: 0 0 15px rgba(255, 127, 80, 0.2);
+  box-shadow: 0 4px 10px rgba(252, 163, 17, 0.3);
 }
 
 .primary-btn:hover {
   background-color: var(--primary-hover);
-  filter: brightness(1.1);
+  filter: brightness(1.05);
+  box-shadow: 0 6px 14px rgba(252, 163, 17, 0.4);
 }
 
 .secondary-btn {
-  background-color: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--panel-border);
+  background-color: #fff;
+  color: var(--text-main);
+  border: 1px solid #ced4da;
 }
 
 .secondary-btn:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
 }
 
 /* Results Area */
@@ -421,13 +422,14 @@ button:active {
 
 /* New flattened card */
 .unified-result-card {
-  background: var(--gradient-bg);
-  border: 1px solid rgba(255, 127, 80, 0.2);
+  background: var(--card-bg);
+  border: 1px solid var(--panel-border);
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
 .result-item {
@@ -435,7 +437,7 @@ button:active {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
 }
 
 .result-item:last-child {
@@ -443,40 +445,44 @@ button:active {
 }
 
 .result-item .label {
-  color: var(--text-muted);
+  color: var(--text-main);
   font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .result-item small {
   display: block;
   font-size: 0.75rem;
-  opacity: 0.7;
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0.9;
+  margin-top: 0.1rem;
 }
 
 .result-item .value {
   font-family: 'Inter', monospace;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #fff;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-main);
 }
 
 .result-item.highlight .value {
-  color: var(--primary-color);
+  color: var(--primary-hover);
 }
 
 .result-item.highlight-success .value {
-  color: var(--accent-color);
+  color: #10b981;
+  /* 成功・ポジティブな緑 */
 }
 
 .value.huge {
-  font-size: 1.7rem;
-  font-weight: 700;
+  font-size: 1.6rem;
 }
 
 /* Animations */
 @keyframes flash {
   0% {
-    background-color: rgba(255, 127, 80, 0.3);
+    background-color: var(--input-highlight);
   }
 
   100% {
