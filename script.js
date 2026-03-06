@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentAssets = getVal('currentAssets');
     const currentLiabilities = getVal('currentLiabilities');
     const totalLiabilities = getVal('totalLiabilities');
-    const investmentSecurities = getVal('investmentSecurities') || 0; // 空の場合は0
+    const investmentSecurities = getVal('investmentSecurities') || 0; // 投資有価証券・非流動その他の金融資産
 
     const stockPrice = getVal('stockPrice');
     const sharesOutstanding = getVal('sharesOutstanding');
@@ -120,7 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const bps = (equity !== null && sharesOutstanding) ? (equity * 100 / sharesOutstanding) : null;
 
     // バリュエーション
-    const psr = (marketCap && sales) ? (marketCap / sales) : null;
+    // 売上高(sales)は百万円。marketCapは億円。単位を合わせるためmarketCap * 100 / sales。
+    const psr = (marketCap && sales) ? ((marketCap * 100) / sales) : null;
     const pbr = (stockPrice && bps) ? (stockPrice / bps) : null;
     const per = (stockPrice && eps) ? (stockPrice / eps) : null;
 
@@ -130,9 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let growthRate = null;
 
     if (currentAssets !== null && totalLiabilities !== null && marketCap !== null) {
+      // marketCapは億円単位、currentAssetsなどは百万円単位なので単位を合わせる
+      // (時価総額億円 * 100 = 時価総額百万円)
+      const marketCapMillion = marketCap * 100;
+
       // ネットキャッシュ比率 = （流動資産＋投資有価証券×0.7-負債）/時価総額（在庫は除外）
+      // ※investmentSecuritiesにはIFRSの「その他の金融資産(非流動)」が含まれる
       const netCashValue = currentAssets + (investmentSecurities * 0.7) - totalLiabilities;
-      const rawNetCashRatio = netCashValue / marketCap;
+      const rawNetCashRatio = netCashValue / marketCapMillion;
       netCashRatio = rawNetCashRatio * 100;
 
       if (per !== null) {
@@ -154,12 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. 結果の表示
-    // 表示用の時価総額（億円単位 = 百万円 / 100）
-    const displayMarketCap = marketCap !== null ? marketCap / 100 : null;
     const marketCapEl = document.getElementById('res-marketCap');
     if (marketCapEl) {
-      if (displayMarketCap !== null) {
-        marketCapEl.innerHTML = `${formatNum(displayMarketCap, 0)} <span style="font-size:0.7em; color:var(--text-muted); font-weight:normal; margin-left:0.5rem;">(${formatNum(stockPrice, 0)}円 × ${formatNum(sharesOutstanding, 0)}万株)</span>`;
+      if (marketCap !== null) {
+        marketCapEl.innerHTML = `${formatNum(marketCap, 0)} <span style="font-size:0.7em; color:var(--text-muted); font-weight:normal; margin-left:0.5rem;">(${formatNum(stockPrice, 0)}円 × ${formatNum(sharesOutstanding, 0)}万株)</span>`;
       } else {
         marketCapEl.textContent = '--';
       }
@@ -243,7 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
 1. 単位: 数値はすべて「百万円」単位、株式数は「万株」単位に換算してください（例: テキスト上に「123億円」「12,300百万円」とあれば「12300」として出力）。見つからない場合は null にしてください。
 2. 期間: 四半期と通期の数字が混在している場合は、必ず「通期（または累計）」の数字を抽出してください。
 3. 株式数: sharesOutstanding は、「期末発行済株式数（自己株式を含む）」から「期末自己株式数」を引いた純粋な発行済株式数を計算してください。
-4. ★流動負債の抽出（最重要）: 決算短信の1ページ目（サマリー）には「流動負債」が直接書かれていないことがほとんどです。必ず後続ページにある「貸借対照表（バランスシート）」の「負債の部」の中にある「流動負債合計」の数値を探し出してください。どうしても見つからなければ「負債合計 - 固定負債」で計算してください。
+4. ★流動負債の抽出: 決算短信の1ページ目（サマリー）には「流動負債」が直接書かれていないことがほとんどです。必ず後続ページにある「貸借対照表（バランスシート）」の「負債の部」の中にある「流動負債合計」の数値を探し出してください。どうしても見つからなければ「負債合計 - 固定負債」で計算してください。
+5. ★投資有価証券（IFRS対応の注意点）: 日本基準の「投資有価証券」があれば investmentSecurities として抽出してください。IFRS適用企業の場合は、必ず「非流動資産（または固定資産）」の部にある「その他の金融資産」のみを抽出して investmentSecurities に入れてください。「流動資産」の中にある「その他の金融資産」は currentAssets に含まれておりダブルカウントになるため、絶対に合算しないでください。
 
 出力JSONフォーマット:
 {
