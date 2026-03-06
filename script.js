@@ -154,9 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. 結果の表示
-    // 表示用の時価総額（10億円単位 = 百万円 / 1000）
-    const displayMarketCap = marketCap !== null ? marketCap / 1000 : null;
-    updateDisplay('res-marketCap', formatNum(displayMarketCap, 1)); // 小数点第1位まで表示
+    // 表示用の時価総額（億円単位 = 百万円 / 100）
+    const displayMarketCap = marketCap !== null ? marketCap / 100 : null;
+    updateDisplay('res-marketCap', formatNum(displayMarketCap, 0)); // 小数点以下なしに変更 (例: 300 億円)
 
     updateDisplay('res-operatingMargin', formatPercent(operatingMargin));
     updateDisplay('res-roe', formatPercent(roe));
