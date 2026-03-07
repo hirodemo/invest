@@ -106,8 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const interestRate = getVal('interestRate') || 1.0;
 
     // 時価総額の自動計算 = (株価[円] × 発行済株式数[万株] × 10,000) / 100,000,000
-    // => 株価 × 株式数(万株) / 1000 = 億円円単位
-    const marketCap = (stockPrice && sharesOutstanding) ? (stockPrice * sharesOutstanding) / 1000 : null;
+    // => (株価 × 株式数(万株) × 10,000) / 100,000,000 = 株価 × 株式数(万株) / 10000 = 億円
+    const marketCap = (stockPrice && sharesOutstanding) ? (stockPrice * sharesOutstanding) / 10000 : null;
 
     // 2. 指標の計算
     // 収益性・安定性
